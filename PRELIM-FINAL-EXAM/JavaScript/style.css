@@ -1,0 +1,154 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eef2f5; /* light gray-blue */
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background-color: #ffffff;
+    border: 1px solid #cfd8dc;
+    padding: 20px;
+}
+
+/* Headings */
+h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #2c3e50; /* dark blue */
+}
+
+h2 {
+    text-align: center;
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 20px;
+    color: #546e7a;
+}
+
+h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #b0bec5;
+    padding-bottom: 5px;
+    color: #37474f;
+}
+
+/* Input Section */
+.input-section {
+    background-color: #f5f8fa; /* very light blue */
+    border: 1px solid #cfd8dc;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+/* Form */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #455a64;
+}
+
+input {
+    padding: 6px;
+    font-size: 13px;
+    border: 1px solid #b0bec5;
+}
+
+input:focus {
+    outline: none;
+    border-color: #90a4ae;
+}
+
+/* Buttons */
+.btn-add {
+    padding: 8px;
+    font-size: 14px;
+    background-color: #90caf9; /* light blue */
+    color: #0d47a1;
+    border: 1px solid #64b5f6;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background-color: #64b5f6;
+}
+
+.btn-delete {
+    padding: 4px 8px;
+    font-size: 12px;
+    background-color: #ffccbc; /* light red */
+    color: #5d4037;
+    border: 1px solid #ffab91;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #ffab91;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #cfd8dc;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th {
+    background-color: #e3f2fd; /* light blue header */
+    border: 1px solid #b0bec5;
+    padding: 6px;
+    text-align: left;
+    color: #0d47a1;
+}
+
+td {
+    border: 1px solid #cfd8dc;
+    padding: 6px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f7f9fb;
+}
+
+/* Footer */
+footer {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 12px;
+    color: #546e7a;
+}
+
+/* Record Count */
+#recordCount {
+    font-weight: bold;
+    color: #1565c0;
+}

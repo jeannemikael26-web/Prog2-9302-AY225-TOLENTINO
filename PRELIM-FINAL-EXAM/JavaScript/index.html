@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Record System - Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Student Record System</h1>
+
+        <div class="input-section">
+            <h3>Add New Student</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="studentID">Student ID:</label>
+                    <input type="text" id="studentID" placeholder="e.g., 073900438">
+                </div>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" placeholder="e.g., John">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" placeholder="e.g., Doe">
+                </div>
+                <div class="form-group">
+                    <label for="lab1">Lab Work 1:</label>
+                    <input type="number" id="lab1" min="0" max="100" placeholder="0-100">
+                </div>
+                <div class="form-group">
+                    <label for="lab2">Lab Work 2:</label>
+                    <input type="number" id="lab2" min="0" max="100" placeholder="0-100">
+                </div>
+                <div class="form-group">
+                    <label for="lab3">Lab Work 3:</label>
+                    <input type="number" id="lab3" min="0" max="100" placeholder="0-100">
+                </div>
+                <div class="form-group">
+                    <label for="prelim">Prelim Exam:</label>
+                    <input type="number" id="prelim" min="0" max="100" placeholder="0-100">
+                </div>
+                <div class="form-group">
+                    <label for="attendance">Attendance:</label>
+                    <input type="number" id="attendance" min="0" max="100" placeholder="0-100">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="btn-add" onclick="addStudent()">➕ Add Student</button>
+                <button class="btn-add" onclick="searchStudent()">🔍 Search ID</button>
+                <button class="btn-add" onclick="returnBack()">↩ Return</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="searchID">Search Student ID:</label>
+            <input type="text" id="searchID" placeholder="Enter ID">
+        </div>
+
+        <script>
+            function searchStudent() {
+                const searchID = document.getElementById("searchID").value.trim();
+                const rows = document.querySelectorAll("#tableBody tr");
+
+                if (searchID === "") {
+                    alert("Please enter a Student ID to search.");
+                    return;
+                }
+
+                let found = false;
+
+                rows.forEach(row => {
+                    if (row.cells[0].textContent === searchID) {
+                        row.style.display = "";
+                        found = true;
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+
+                if (!found) {
+                    alert("Student ID not found.");
+                }
+            }
+
+            function returnBack() {
+                const rows = document.querySelectorAll("#tableBody tr");
+                rows.forEach(row => {
+                    row.style.display = "";
+                });
+                document.getElementById("searchID").value = "";
+            }
+        </script>
+
+        <div class="table-section">
+            <h3>Student Records (Total: <span id="recordCount">0</span>)</h3>
+            <div class="table-wrapper">
+                <table id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Lab Work 1</th>
+                            <th>Lab Work 2</th>
+                            <th>Lab Work 3</th>
+                            <th>Prelim Exam</th>
+                            <th>Attendance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer></footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
