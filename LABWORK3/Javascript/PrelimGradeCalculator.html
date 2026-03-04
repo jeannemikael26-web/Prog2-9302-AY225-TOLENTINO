@@ -287,6 +287,22 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" placeholder="Enter your full name">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="yearLevel">Year Level</label>
+                        <input type="text" id="yearLevel" placeholder="e.g., 1st Year">
+                    </div>
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <input type="text" id="course" placeholder="e.g., BSCS">
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="attendance">Number of Attendances (out of 5 sessions)</label>
                     <input type="number" id="attendance" placeholder="e.g., 4" min="0" max="5">
                 </div>
@@ -320,10 +336,18 @@
 
     <script>
         function calculateGrades() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const yearLevel = document.getElementById('yearLevel').value.trim();
+            const course = document.getElementById('course').value.trim();
             const attendance = parseFloat(document.getElementById('attendance').value);
             const lab1 = parseFloat(document.getElementById('lab1').value);
             const lab2 = parseFloat(document.getElementById('lab2').value);
             const lab3 = parseFloat(document.getElementById('lab3').value);
+
+            if (!studentName || !yearLevel || !course) {
+                alert('Please fill in your name, year level, and course!');
+                return;
+            }
 
             if (isNaN(attendance) || isNaN(lab1) || isNaN(lab2) || isNaN(lab3)) {
                 alert('Please fill in all fields with valid numbers!');
@@ -352,12 +376,28 @@
             const passingScore = (75 - (classStanding * 0.70)) / 0.30;
             const excellentScore = (100 - (classStanding * 0.70)) / 0.30;
 
-            displayResults(attendance, attendancePercent, lab1, lab2, lab3, 
+            displayResults(studentName, yearLevel, course, attendance, attendancePercent, lab1, lab2, lab3, 
                           labAverage, classStanding, passingScore, excellentScore);
         }
 
-        function displayResults(att, attPercent, l1, l2, l3, labAvg, cs, pass, excel) {
+        function displayResults(name, year, course, att, attPercent, l1, l2, l3, labAvg, cs, pass, excel) {
             let output = `
+                <div class="info-card">
+                    <div class="info-header">👤 Student Information</div>
+                    <div class="info-row">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">${name}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Year Level:</span>
+                        <span class="info-value">${year}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Course:</span>
+                        <span class="info-value">${course}</span>
+                    </div>
+                </div>
+
                 <div class="info-card">
                     <div class="info-header">📅 Attendance Summary</div>
                     <div class="info-row">
@@ -448,6 +488,9 @@
         }
 
         function clearAll() {
+            document.getElementById('studentName').value = '';
+            document.getElementById('yearLevel').value = '';
+            document.getElementById('course').value = '';
             document.getElementById('attendance').value = '';
             document.getElementById('lab1').value = '';
             document.getElementById('lab2').value = '';

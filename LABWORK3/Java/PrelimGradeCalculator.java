@@ -5,13 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class PrelimGradeCalculator extends JFrame {
+    private JTextField studentNameField, yearLevelField, courseField;
     private JTextField attendanceField, lab1Field, lab2Field, lab3Field;
     private JTextArea outputArea;
     private JButton calculateButton, clearButton;
     
     public PrelimGradeCalculator() {
         setTitle("Prelim Grade Calculator");
-        setSize(700, 750);
+        setSize(800, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -23,7 +24,7 @@ public class PrelimGradeCalculator extends JFrame {
         // Header Panel
         JPanel headerPanel = new JPanel();
         headerPanel.setBackground(new Color(41, 128, 185));
-        headerPanel.setPreferredSize(new Dimension(700, 100));
+        headerPanel.setPreferredSize(new Dimension(800, 100));
         headerPanel.setLayout(new GridBagLayout());
         
         JPanel headerContent = new JPanel();
@@ -68,8 +69,24 @@ public class PrelimGradeCalculator extends JFrame {
         inputSection.add(inputTitle);
         inputSection.add(Box.createRigidArea(new Dimension(0, 25)));
         
+        // Student Name Input
+        inputSection.add(createCenteredInputRow("Student Name:", 
+            studentNameField = createStyledTextField()));
+        inputSection.add(Box.createRigidArea(new Dimension(0, 18)));
+        
+        // Year and Course in Grid
+        JPanel yearCoursePanel = new JPanel(new GridLayout(1, 2, 20, 0));
+        yearCoursePanel.setBackground(Color.WHITE);
+        yearCoursePanel.setMaximumSize(new Dimension(680, 70));
+        
+        yearCoursePanel.add(createLabInput("Year Level", yearLevelField = createStyledTextField()));
+        yearCoursePanel.add(createLabInput("Course", courseField = createStyledTextField()));
+        
+        inputSection.add(yearCoursePanel);
+        inputSection.add(Box.createRigidArea(new Dimension(0, 18)));
+        
         // Attendance Input
-        inputSection.add(createCenteredInputRow("Number of Attendances:", 
+        inputSection.add(createCenteredInputRow("Number of Attendances (out of 5):", 
             attendanceField = createStyledTextField()));
         inputSection.add(Box.createRigidArea(new Dimension(0, 18)));
         
@@ -83,7 +100,7 @@ public class PrelimGradeCalculator extends JFrame {
         
         JPanel labGrid = new JPanel(new GridLayout(1, 3, 20, 0));
         labGrid.setBackground(Color.WHITE);
-        labGrid.setMaximumSize(new Dimension(580, 70));
+        labGrid.setMaximumSize(new Dimension(680, 70));
         
         labGrid.add(createLabInput("Lab 1", lab1Field = createStyledTextField()));
         labGrid.add(createLabInput("Lab 2", lab2Field = createStyledTextField()));
@@ -95,7 +112,7 @@ public class PrelimGradeCalculator extends JFrame {
         // Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.setMaximumSize(new Dimension(580, 45));
+        buttonPanel.setMaximumSize(new Dimension(680, 45));
         
         calculateButton = createStyledButton("Calculate", new Color(41, 128, 185));
         clearButton = createStyledButton("Clear", new Color(149, 165, 166));
@@ -122,11 +139,11 @@ public class PrelimGradeCalculator extends JFrame {
         outputTitle.setHorizontalAlignment(SwingConstants.CENTER);
         outputSection.add(outputTitle, BorderLayout.NORTH);
         
-        outputArea = new JTextArea(16, 50);
+        outputArea = new JTextArea(22, 65);
         outputArea.setEditable(false);
-        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        outputArea.setFont(new Font("Courier New", Font.PLAIN, 13));
         outputArea.setBackground(new Color(250, 251, 252));
-        outputArea.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        outputArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         outputArea.setLineWrap(false);
         
         JScrollPane scrollPane = new JScrollPane(outputArea);
@@ -171,14 +188,14 @@ public class PrelimGradeCalculator extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
-        panel.setMaximumSize(new Dimension(580, 70));
+        panel.setMaximumSize(new Dimension(680, 70));
         
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Arial", Font.PLAIN, 13));
         label.setForeground(new Color(52, 73, 94));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        textField.setMaximumSize(new Dimension(350, 38));
+        textField.setMaximumSize(new Dimension(400, 38));
         textField.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panel.add(label);
@@ -198,7 +215,7 @@ public class PrelimGradeCalculator extends JFrame {
         label.setForeground(new Color(52, 73, 94));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        textField.setMaximumSize(new Dimension(180, 38));
+        textField.setMaximumSize(new Dimension(200, 38));
         textField.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panel.add(label);
@@ -210,6 +227,18 @@ public class PrelimGradeCalculator extends JFrame {
     
     private void calculateGrades() {
         try {
+            String studentName = studentNameField.getText().trim();
+            String yearLevel = yearLevelField.getText().trim();
+            String course = courseField.getText().trim();
+            
+            if (studentName.isEmpty() || yearLevel.isEmpty() || course.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Please fill in your name, year level, and course.",
+                    "Missing Information",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
             double attendance = Double.parseDouble(attendanceField.getText().trim());
             double lab1 = Double.parseDouble(lab1Field.getText().trim());
             double lab2 = Double.parseDouble(lab2Field.getText().trim());
@@ -223,19 +252,17 @@ public class PrelimGradeCalculator extends JFrame {
                 return;
             }
             
-            if (attendance < 0) {
+            if (attendance < 0 || attendance > 5) {
                 JOptionPane.showMessageDialog(this,
-                    "Attendance cannot be negative.",
+                    "Attendance must be between 0 and 5.",
                     "Invalid Input",
                     JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
             double labWorkAverage = (lab1 + lab2 + lab3) / 3.0;
-            // Calculate Attendance Score (Prelim = 5 sessions total)
             double attendanceScore = Math.min((attendance / 5.0) * 100, 100);
             
-            // Check if attendance meets 75% requirement (need at least 4 out of 5)
             if (attendanceScore < 75) {
                 JOptionPane.showMessageDialog(this,
                     "FAILED: Attendance is below 75%.\nYou need at least 4 out of 5 attendances to pass the Prelim period.",
@@ -248,7 +275,7 @@ public class PrelimGradeCalculator extends JFrame {
             double passingExam = calculateRequiredExam(75, classStanding);
             double excellentExam = calculateRequiredExam(100, classStanding);
             
-            displayResults(attendance, attendanceScore, lab1, lab2, lab3,
+            displayResults(studentName, yearLevel, course, attendance, attendanceScore, lab1, lab2, lab3,
                 labWorkAverage, classStanding, passingExam, excellentExam);
             
         } catch (NumberFormatException ex) {
@@ -260,97 +287,116 @@ public class PrelimGradeCalculator extends JFrame {
     }
     
     private double calculateRequiredExam(double targetGrade, double classStanding) {
-        // Prelim Grade = (Prelim Exam × 0.30) + (Class Standing × 0.70)
-        // Solve for Prelim Exam: (targetGrade - classStanding * 0.70) / 0.30
         return (targetGrade - (classStanding * 0.70)) / 0.30;
     }
     
-    private void displayResults(double attendance, double attendanceScore,
+    private void displayResults(String studentName, String yearLevel, String course,
+                               double attendance, double attendanceScore,
                                double lab1, double lab2, double lab3,
                                double labWorkAverage, double classStanding,
                                double passingExam, double excellentExam) {
         StringBuilder sb = new StringBuilder();
         
-        sb.append(centerText("═══════════════════════════════════════════════════════", 55));
-        sb.append(centerText("PRELIM GRADE CALCULATION RESULTS", 55));
-        sb.append(centerText("═══════════════════════════════════════════════════════", 55));
+        sb.append("\n");
+        sb.append("  ╔══════════════════════════════════════════════════════════╗\n");
+        sb.append("  ║              PRELIM GRADE CALCULATION RESULTS            ║\n");
+        sb.append("  ╚══════════════════════════════════════════════════════════╝\n");
         sb.append("\n");
         
-        sb.append(centerText("ATTENDANCE SUMMARY", 55));
-        sb.append(centerText("─────────────────────────────────────────────────────", 55));
-        sb.append(formatLine("Total Attendances", String.format("%.0f", attendance), 55));
-        sb.append(formatLine("Attendance Score", String.format("%.2f%%", attendanceScore), 55));
+        // Student Information Card
+        sb.append("  ┌──────────────────────────────────────────────────────────┐\n");
+        sb.append("  │  STUDENT INFORMATION                                     │\n");
+        sb.append("  ├──────────────────────────────────────────────────────────┤\n");
+        sb.append(String.format("  │  Name:         %-42s│\n", studentName));
+        sb.append(String.format("  │  Year Level:   %-42s│\n", yearLevel));
+        sb.append(String.format("  │  Course:       %-42s│\n", course));
+        sb.append("  └──────────────────────────────────────────────────────────┘\n");
         sb.append("\n");
         
-        sb.append(centerText("LAB WORK SUMMARY", 55));
-        sb.append(centerText("─────────────────────────────────────────────────────", 55));
-        sb.append(formatLine("Lab Work 1", String.format("%.2f", lab1), 55));
-        sb.append(formatLine("Lab Work 2", String.format("%.2f", lab2), 55));
-        sb.append(formatLine("Lab Work 3", String.format("%.2f", lab3), 55));
-        sb.append(formatLine("Lab Work Average", String.format("%.2f", labWorkAverage), 55));
+        // Attendance Card
+        sb.append("  ┌──────────────────────────────────────────────────────────┐\n");
+        sb.append("  │  ATTENDANCE                                              │\n");
+        sb.append("  ├──────────────────────────────────────────────────────────┤\n");
+        sb.append(String.format("  │  Sessions Attended:       %-31s│\n", 
+            String.format("%.0f out of 5", attendance)));
+        sb.append(String.format("  │  Attendance Percentage:   %-31s│\n", 
+            String.format("%.2f%%", attendanceScore)));
+        sb.append("  └──────────────────────────────────────────────────────────┘\n");
         sb.append("\n");
         
-        sb.append(centerText("CLASS STANDING", 55));
-        sb.append(centerText("─────────────────────────────────────────────────────", 55));
-        sb.append(formatLine("Current Class Standing", String.format("%.2f", classStanding), 55));
-        sb.append(centerText("(Attendance 40% + Lab Average 60%)", 55));
+        // Lab Work Card
+        sb.append("  ┌──────────────────────────────────────────────────────────┐\n");
+        sb.append("  │  LAB WORK GRADES                                         │\n");
+        sb.append("  ├──────────────────────────────────────────────────────────┤\n");
+        sb.append(String.format("  │  Lab Work 1:   %-42s│\n", String.format("%.2f", lab1)));
+        sb.append(String.format("  │  Lab Work 2:   %-42s│\n", String.format("%.2f", lab2)));
+        sb.append(String.format("  │  Lab Work 3:   %-42s│\n", String.format("%.2f", lab3)));
+        sb.append(String.format("  │  Average:      %-42s│\n", String.format("%.2f", labWorkAverage)));
+        sb.append("  └──────────────────────────────────────────────────────────┘\n");
         sb.append("\n");
         
-        sb.append(centerText("═══════════════════════════════════════════════════════", 55));
-        sb.append(centerText("REQUIRED PRELIM EXAM SCORES", 55));
-        sb.append(centerText("═══════════════════════════════════════════════════════", 55));
+        // Class Standing Card
+        sb.append("  ┌──────────────────────────────────────────────────────────┐\n");
+        sb.append("  │  CLASS STANDING                                          │\n");
+        sb.append("  ├──────────────────────────────────────────────────────────┤\n");
+        sb.append(String.format("  │  Your Class Standing:   %-33s│\n", 
+            String.format("%.2f", classStanding)));
+        sb.append("  └──────────────────────────────────────────────────────────┘\n");
+        sb.append("\n");
+        sb.append("  ╔══════════════════════════════════════════════════════════╗\n");
+        sb.append("  ║                 REQUIRED EXAM SCORES                     ║\n");
+        sb.append("  ╚══════════════════════════════════════════════════════════╝\n");
         sb.append("\n");
         
-        sb.append(centerText("TO PASS (Target Grade: 75)", 55));
-        sb.append(centerText("─────────────────────────────────────────────────────", 55));
+        // Passing Grade Card
+        sb.append("  ┌──────────────────────────────────────────────────────────┐\n");
+        sb.append("  │  TO PASS (Target Grade: 75)                              │\n");
+        sb.append("  ├──────────────────────────────────────────────────────────┤\n");
+        sb.append(String.format("  │  Required Exam Score:   %-33s│\n", 
+            passingExam > 0 ? String.format("%.2f", passingExam) : "0.00"));
+        sb.append("  │                                                          │\n");
         if (passingExam > 100) {
-            sb.append(formatLine("Required Exam Score", String.format("%.2f", passingExam), 55));
-            sb.append(centerText("Status: Difficult to achieve (exceeds 100)", 55));
+            sb.append("  │  Status: Difficult to pass.                              │\n");
+            sb.append("  │          Score needed is over 100.                       │\n");
         } else if (passingExam < 0) {
-            sb.append(formatLine("Required Exam Score", "0.00", 55));
-            sb.append(centerText("Status: You will pass!", 55));
-            sb.append(centerText("Your Class Standing ensures passing.", 55));
+            sb.append("  │  Status: You will pass!                                  │\n");
+            sb.append("  │          Class standing is enough.                       │\n");
         } else {
-            sb.append(formatLine("Required Exam Score", String.format("%.2f", passingExam), 55));
-            sb.append(centerText("Status: Achievable with preparation.", 55));
+            sb.append("  │  Status: You need this score to pass.                    │\n");
         }
+        sb.append("  └──────────────────────────────────────────────────────────┘\n");
         sb.append("\n");
         
-        sb.append(centerText("FOR EXCELLENT GRADE (Target Grade: 100)", 55));
-        sb.append(centerText("─────────────────────────────────────────────────────", 55));
+        // Excellent Grade Card
+        sb.append("  ┌──────────────────────────────────────────────────────────┐\n");
+        sb.append("  │  FOR EXCELLENT GRADE (Target Grade: 100)                 │\n");
+        sb.append("  ├──────────────────────────────────────────────────────────┤\n");
+        sb.append(String.format("  │  Required Exam Score:   %-33s│\n", 
+            excellentExam > 0 ? String.format("%.2f", excellentExam) : "0.00"));
+        sb.append("  │                                                          │\n");
         if (excellentExam > 100) {
-            sb.append(formatLine("Required Exam Score", String.format("%.2f", excellentExam), 55));
-            sb.append(centerText("Status: Difficult to achieve (exceeds 100)", 55));
+            sb.append("  │  Status: Difficult to achieve.                           │\n");
+            sb.append("  │          Score needed is over 100.                       │\n");
         } else if (excellentExam < 0) {
-            sb.append(formatLine("Required Exam Score", "0.00", 55));
-            sb.append(centerText("Status: You will achieve excellence!", 55));
-            sb.append(centerText("Your Class Standing ensures it.", 55));
+            sb.append("  │  Status: Excellent grade guaranteed!                     │\n");
         } else {
-            sb.append(formatLine("Required Exam Score", String.format("%.2f", excellentExam), 55));
-            sb.append(centerText("Status: Achievable with excellent preparation.", 55));
+            sb.append("  │  Status: You need this score for excellent grade.        │\n");
         }
+        sb.append("  └──────────────────────────────────────────────────────────┘\n");
         sb.append("\n");
         
-        sb.append(centerText("═══════════════════════════════════════════════════════", 55));
-        sb.append(centerText("Prelim Grade = (Exam × 30%) + (Class Standing × 70%)", 55));
-        sb.append(centerText("═══════════════════════════════════════════════════════", 55));
+        sb.append("  ╔══════════════════════════════════════════════════════════╗\n");
+        sb.append("  ║   Formula: Prelim = (Exam × 30%) + (Class × 70%)        ║\n");
+        sb.append("  ╚══════════════════════════════════════════════════════════╝\n");
         
         outputArea.setText(sb.toString());
         outputArea.setCaretPosition(0);
     }
     
-    private String centerText(String text, int width) {
-        int padding = (width - text.length()) / 2;
-        return " ".repeat(Math.max(0, padding)) + text + "\n";
-    }
-    
-    private String formatLine(String label, String value, int width) {
-        String line = label + ": " + value;
-        int padding = (width - line.length()) / 2;
-        return " ".repeat(Math.max(0, padding)) + line + "\n";
-    }
-    
     private void clearFields() {
+        studentNameField.setText("");
+        yearLevelField.setText("");
+        courseField.setText("");
         attendanceField.setText("");
         lab1Field.setText("");
         lab2Field.setText("");
