@@ -1,0 +1,17 @@
+TOLENTINO
+
+MIDTERM-LAB-1: Added Node.js data cleaning script (converted from Java).
+
+Files included:
+- Java/  (Java source folder)
+- TOLENTINO_MIDTERM_LAB1.js  (Node.js version of the Java program)
+- vgchartz-2024.csv (dataset)
+
+Useful links:
+- Kaggle dataset: https://www.kaggle.com/datasets/asaniczka/video-game-sales-2024
+- Instructor repo (MIDTERM-LAB-1 instructions): https://github.com/Sir-Val/Prog2-9302-AY225-FABREGAS
+- Example student repo (from screenshots): https://github.com/whoopjared/Prog2-9302-AY225-LAORDIN
+
+To run the Node.js script:
+1) Open a terminal in this folder
+2) Run `node TOLENTINO_MIDTERM_LAB1.js` and provide the CSV path when prompted
