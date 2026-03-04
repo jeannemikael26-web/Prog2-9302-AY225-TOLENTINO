@@ -2,6 +2,7 @@ package LABWORK3.Java;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class PrelimGradeCalculator extends JFrame {
     private JTextField attendanceField, lab1Field, lab2Field, lab3Field;
@@ -231,7 +232,18 @@ public class PrelimGradeCalculator extends JFrame {
             }
             
             double labWorkAverage = (lab1 + lab2 + lab3) / 3.0;
-            double attendanceScore = Math.min((attendance / 20.0) * 100, 100);
+            // Calculate Attendance Score (Prelim = 5 sessions total)
+            double attendanceScore = Math.min((attendance / 5.0) * 100, 100);
+            
+            // Check if attendance meets 75% requirement (need at least 4 out of 5)
+            if (attendanceScore < 75) {
+                JOptionPane.showMessageDialog(this,
+                    "FAILED: Attendance is below 75%.\nYou need at least 4 out of 5 attendances to pass the Prelim period.",
+                    "Attendance Requirement Not Met",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             double classStanding = (attendanceScore * 0.40) + (labWorkAverage * 0.60);
             double passingExam = calculateRequiredExam(75, classStanding);
             double excellentExam = calculateRequiredExam(100, classStanding);
@@ -248,7 +260,9 @@ public class PrelimGradeCalculator extends JFrame {
     }
     
     private double calculateRequiredExam(double targetGrade, double classStanding) {
-        return (targetGrade - (classStanding * 0.30)) / 0.70;
+        // Prelim Grade = (Prelim Exam × 0.30) + (Class Standing × 0.70)
+        // Solve for Prelim Exam: (targetGrade - classStanding * 0.70) / 0.30
+        return (targetGrade - (classStanding * 0.70)) / 0.30;
     }
     
     private void displayResults(double attendance, double attendanceScore,
@@ -318,7 +332,7 @@ public class PrelimGradeCalculator extends JFrame {
         sb.append("\n");
         
         sb.append(centerText("═══════════════════════════════════════════════════════", 55));
-        sb.append(centerText("Prelim Grade = (Exam × 70%) + (Class Standing × 30%)", 55));
+        sb.append(centerText("Prelim Grade = (Exam × 30%) + (Class Standing × 70%)", 55));
         sb.append(centerText("═══════════════════════════════════════════════════════", 55));
         
         outputArea.setText(sb.toString());
